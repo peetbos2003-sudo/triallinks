@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECR Trial Links</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<style>
+  :root{ --navy:#1F3A5F; --blue:#2E75B6; --light:#D9E2EC; --lighter:#EEF3F8; --grey:#666; --ok:#2e7d32; color-scheme:light; }
+  *{box-sizing:border-box}
+  body{font-family:'Segoe UI',Arial,sans-serif;color:#1c1c1c;margin:0;background:#fff;font-size:13px;}
+  .wrap{padding:14px 14px 30px;}
+  h1{color:var(--navy);font-size:16px;margin:0 0 2px;}
+  .sub{color:var(--grey);font-size:11px;margin:4px 0 12px;}
+  label.fld{display:block;font-weight:600;color:var(--navy);font-size:11px;margin-bottom:4px;}
+  input[type=email]{width:100%;font-size:14px;padding:8px 10px;border:2px solid var(--light);border-radius:6px;outline:none;}
+  input[type=email]:focus{border-color:var(--blue);}
+  .recip{font-size:11px;color:var(--grey);margin:5px 0 0;}
+  .recip b{color:var(--navy);}
+  .warn{color:#b00000;font-size:11px;margin-top:5px;min-height:14px;}
+  .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px;}
+  button{font-family:inherit;border:none;border-radius:6px;cursor:pointer;}
+  .ghost{background:var(--lighter);color:var(--navy);border:1px solid var(--light);font-size:11px;padding:5px 9px;}
+  .area{color:var(--blue);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 2px;}
+  .chk{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:3px 0;cursor:pointer;}
+  .chk input{width:15px;height:15px;accent-color:var(--blue);}
+  .insert{background:var(--blue);color:#fff;font-weight:700;font-size:13px;padding:11px 14px;width:100%;margin-top:14px;}
+  .insert:disabled{background:#9bbbdc;cursor:default;}
+  .copy{background:var(--lighter);color:var(--navy);border:1px solid var(--light);font-weight:600;font-size:12px;padding:8px 12px;width:100%;margin-top:8px;}
+  .status{font-size:11px;margin-top:8px;min-height:15px;}
+  .status.ok{color:var(--ok);font-weight:600;}
+  .status.err{color:#b00000;}
+  hr{border:none;border-top:1px solid var(--lighter);margin:12px 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>ECR Trial Links</h1>
+  <div class="sub">Pick the reports, then insert personalized links into this email. The prospect's address is the access key.</div>
+
+  <label class="fld" for="email">Prospect email</label>
+  <input type="email" id="email" placeholder="name@company.com" autocomplete="off" spellcheck="false">
+  <div class="recip" id="recip"></div>
+  <div class="warn" id="warn"></div>
+
+  <div class="toolbar">
+    <button class="ghost" onclick="setAll(true)">All</button>
+    <button class="ghost" onclick="setAll(false)">None</button>
+    <button class="ghost" onclick="resetDefault()">Default</button>
+    <button class="ghost" onclick="useRecipient()">Use recipient</button>
+  </div>
+  <div id="grid"></div>
+
+  <button class="insert" id="btnInsert" onclick="insertLinks()" disabled>Insert links into email</button>
+  <button class="copy" id="btnCopy" onclick="copyBullets()">Copy instead</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+const BASE="https://ecrresearch.com/research";
+const REPORTS=[
+  {area:"Macro & Markets", name:"Global Financial Markets", slug:"global-financial-markets", def:true},
+  {area:"Macro & Markets", name:"Interest Rates Outlook", slug:"interest-rates-outlook", def:true},
+  {area:"Macro & Markets", name:"Currencies Outlook", slug:"currencies-outlook", def:false},
+  {area:"Macro & Markets", name:"Global Political Analysis", slug:"global-political-analysis", def:false},
+  {area:"Macro & Markets", name:"Monthly Chart Pack", slug:"monthly-chart-pack", def:false},
+  {area:"Macro & Markets", name:"Gold Report", slug:"gold-report", def:false},
+  {area:"Asset Allocation", name:"Strategic Asset Allocation", slug:"strategic-asset-allocation", def:true},
+  {area:"Asset Allocation", name:"Tactical Asset Allocation", slug:"tactical-asset-allocation", def:true},
+  {area:"Asset Allocation", name:"Quantitative Asset Allocation", slug:"quantitative-asset-allocation", def:false},
+  {area:"Asset Allocation", name:"Technical Trend Outlook", slug:"technical-trend-outlook", def:false},
+  {area:"Asset Allocation", name:"Fund Selection", slug:"fund-selection", def:false},
+];
+
+const emailEl=document.getElementById('email');
+const warnEl=document.getElementById('warn');
+const recipEl=document.getElementById('recip');
+const gridEl=document.getElementById('grid');
+const statusEl=document.getElementById('status');
+const btnInsert=document.getElementById('btnInsert');
+let composeItem=null;
+
+Office.onReady(function(info){
+  buildGrid();
+  resetDefault();
+  if(info.host===Office.HostType.Outlook && Office.context.mailbox && Office.context.mailbox.item){
+    composeItem=Office.context.mailbox.item;
+    prefillRecipient();
+  }
+  emailEl.addEventListener('input',validate);
+  validate();
+});
+
+function buildGrid(){
+  let last="";
+  REPORTS.forEach((r,i)=>{
+    if(r.area!==last){ const a=document.createElement('div'); a.className='area'; a.textContent=r.area; gridEl.appendChild(a); last=r.area; }
+    const lab=document.createElement('label'); lab.className='chk';
+    lab.innerHTML='<input type="checkbox" data-i="'+i+'"> <span>'+r.name+'</span>';
+    lab.querySelector('input').addEventListener('change',validate);
+    gridEl.appendChild(lab);
+  });
+}
+function setAll(v){ document.querySelectorAll('#grid input').forEach(c=>c.checked=v); validate(); }
+function resetDefault(){ document.querySelectorAll('#grid input').forEach(c=>{c.checked=REPORTS[c.dataset.i].def;}); validate(); }
+
+function prefillRecipient(){
+  try{
+    composeItem.to.getAsync(function(res){
+      if(res.status===Office.AsyncResultStatus.Succeeded && res.value && res.value.length){
+        const addr=res.value[0].emailAddress||"";
+        recipEl.innerHTML='Recipient: <b>'+(addr||'(none yet)')+'</b>';
+        if(addr && !emailEl.value){ emailEl.value=addr; validate(); }
+      } else {
+        recipEl.textContent='Add a recipient, then tap "Use recipient".';
+      }
+    });
+  }catch(e){ recipEl.textContent=''; }
+}
+function useRecipient(){ if(composeItem){ emailEl.value=''; prefillRecipient(); } }
+
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function getEmail(){ return emailEl.value.trim().toLowerCase(); }
+function urlFor(slug,email){ return slug===""? BASE+"?email="+email : BASE+"/"+slug+"?email="+email; }
+function selected(){ const o=[]; document.querySelectorAll('#grid input:checked').forEach(c=>o.push(REPORTS[c.dataset.i])); return o; }
+
+function validate(){
+  const e=getEmail(); const sel=selected();
+  let ok=true;
+  if(!e){ warnEl.textContent=""; ok=false; }
+  else if(!validEmail(e)){ warnEl.textContent="That doesn't look like a valid email."; ok=false; }
+  else warnEl.textContent="";
+  if(ok && sel.length===0){ ok=false; }
+  btnInsert.disabled=!ok;
+  return ok;
+}
+
+function bulletsHtml(){
+  const e=getEmail();
+  let html='<p><a href="'+urlFor("",e)+'">ECR platform access</a></p><ul>';
+  selected().forEach(r=>html+='<li><a href="'+urlFor(r.slug,e)+'">'+r.name+'</a></li>');
+  html+='</ul>';
+  return html;
+}
+
+function insertLinks(){
+  if(!validate() || !composeItem) return;
+  statusEl.className='status'; statusEl.textContent='Inserting...';
+  composeItem.body.setSelectedDataAsync(bulletsHtml(), {coercionType: Office.CoercionType.Html}, function(res){
+    if(res.status===Office.AsyncResultStatus.Succeeded){
+      statusEl.className='status ok'; statusEl.textContent='Links inserted at your cursor.';
+    } else {
+      statusEl.className='status err'; statusEl.textContent='Could not insert: '+res.error.message+' — try "Copy instead".';
+    }
+  });
+}
+
+function copyBullets(){
+  if(!getEmail() || !validEmail(getEmail())){ statusEl.className='status err'; statusEl.textContent='Enter a valid email first.'; return; }
+  const html=bulletsHtml();
+  const div=document.createElement('div'); div.contentEditable='true'; div.style.position='fixed'; div.style.opacity='0'; div.innerHTML=html;
+  document.body.appendChild(div);
+  const range=document.createRange(); range.selectNodeContents(div);
+  const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+  try{ document.execCommand('copy'); statusEl.className='status ok'; statusEl.textContent='Copied — paste into the email.'; }
+  catch(e){ statusEl.className='status err'; statusEl.textContent='Copy failed.'; }
+  sel.removeAllRanges(); document.body.removeChild(div);
+}
+</script>
+</body>
+</html>
