@@ -174,7 +174,7 @@ function buildOverviewHtml(){
     `<a href="${urlFor(r.slug,e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;font-size:14px;">${r.name}</a>`+
     `<div style="color:#666666;font-size:12px;line-height:1.5;margin-top:3px;"><span style="color:#9a9a9a;">${r.freq}.</span> ${r.desc}</div>`+
     `</td></tr>`;
-  const sectionRow=(t)=>`<tr><td style="padding:14px 0 4px;border-bottom:2px solid #D9E2EC;font-size:12px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#2E75B6;">${t}</td></tr>`;
+  const sectionRow=(t)=>`<tr><td style="padding:14px 0 4px;border-bottom:2px solid #D9E2EC;font-size:10pt;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#97C0E9;">${t}</td></tr>`;
   let rows='';
   let last='';
   REPORTS.forEach((r)=>{ if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; } rows+=reportRow(r); });
