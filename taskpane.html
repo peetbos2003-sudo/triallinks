@@ -47,11 +47,11 @@
   <div class="warn" id="warn"></div>
 
   <div class="toolbar">
+    <button class="ghost" onclick="useRecipient()">Use recipient</button>
     <button class="ghost" onclick="applyProfile('investment')">Investment</button>
     <button class="ghost" onclick="applyProfile('treasury')">Treasury</button>
     <button class="ghost" onclick="setAll(true)">All</button>
     <button class="ghost" onclick="setAll(false)">None</button>
-    <button class="ghost" onclick="useRecipient()">Use recipient</button>
   </div>
   <div id="grid"></div>
 
@@ -165,24 +165,20 @@ function insertLinks(){
 
 function buildOverviewHtml(){
   const e=getEmail();
-  const sectionHdr=(t)=>`<div style="font-size:12px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#2E75B6;border-bottom:2px solid #D9E2EC;padding-bottom:4px;margin:16px 0 6px;">${t}</div>`;
-  const rowFor=(r)=>`<tr><td style="padding:7px 0;border-bottom:1px solid #EEF3F8;"><a href="${urlFor(r.slug,e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;">${r.name}</a></td><td style="padding:7px 0 7px 12px;border-bottom:1px solid #EEF3F8;text-align:right;color:#888888;font-size:12px;white-space:nowrap;">${r.freq}</td></tr>`;
-  let html=`<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;color:#1c1c1c;max-width:560px;">`;
-  html+=`<p style="margin:0 0 2px;">An overview of our research, each title linked to your personal access:</p>`;
+  const W=500;
+  const reportRow=(r)=>`<tr><td style="padding:7px 0;border-bottom:1px solid #EEF3F8;font-size:14px;"><a href="${urlFor(r.slug,e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;">${r.name}</a></td><td style="padding:7px 0;border-bottom:1px solid #EEF3F8;text-align:right;color:#888888;font-size:12px;white-space:nowrap;">${r.freq}</td></tr>`;
+  const sectionRow=(t)=>`<tr><td colspan="2" style="padding:14px 0 4px;border-bottom:2px solid #D9E2EC;font-size:12px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#2E75B6;">${t}</td></tr>`;
+  let rows='';
   let last='';
   REPORTS.forEach((r)=>{
-    if(r.area!==last){
-      if(last!=='') html+=`</table>`;
-      html+=sectionHdr(r.area);
-      html+=`<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;width:100%;">`;
-      last=r.area;
-    }
-    html+=rowFor(r);
+    if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; }
+    rows+=reportRow(r);
   });
-  html+=`</table>`;
-  html+=`<p style="margin:16px 0 0;"><a href="${urlFor('',e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;">Open the full research platform &#8250;</a></p>`;
-  html+=`</div>`;
-  return html;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px;max-width:${W}px;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#1c1c1c;">`+
+    `<tr><td colspan="2" style="padding:0 0 6px;font-size:14px;">An overview of our research, each title linked to your personal access:</td></tr>`+
+    rows+
+    `<tr><td colspan="2" style="padding:14px 0 0;font-size:14px;"><a href="${urlFor('',e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;">Open the full research platform &#8250;</a></td></tr>`+
+    `</table>`;
 }
 
 function insertOverview(){
