@@ -28,7 +28,7 @@
   .insert{background:var(--blue);color:#fff;font-weight:700;font-size:13px;padding:11px 14px;width:100%;margin-top:14px;}
   .insert:disabled{background:#9bbbdc;cursor:default;}
   .copy{background:var(--lighter);color:var(--navy);border:1px solid var(--light);font-weight:600;font-size:12px;padding:8px 12px;width:100%;margin-top:8px;}
-  .overview{background:var(--navy);color:#fff;font-weight:700;font-size:13px;padding:11px 14px;width:100%;margin-top:8px;}
+  .overview{background:#fff;color:var(--blue);border:1px solid var(--blue);font-weight:600;font-size:13px;padding:10px 14px;width:100%;margin-top:8px;}
   .hint2{font-size:11px;color:var(--grey);margin-top:6px;text-align:center;}
   .status{font-size:11px;margin-top:8px;min-height:15px;}
   .status.ok{color:var(--ok);font-weight:600;}
@@ -67,7 +67,7 @@ const BASE="https://ecrresearch.com/research";
 const REPORTS=[
   {area:"Macro & Markets", name:"Global Financial Markets Outlook", slug:"global-financial-markets", def:false, freq:"Bi-weekly", desc:"Fundamental analysis of the global financial markets and their consequences."},
   {area:"Macro & Markets", name:"Interest Rates Outlook", slug:"interest-rates-outlook", def:false, freq:"Bi-weekly", desc:"Fundamental analysis of the global interest-rate markets and central-bank policy."},
-  {area:"Macro & Markets", name:"Currencies Outlook", slug:"currencies-outlook", def:false, freq:"Weekly", desc:"Alternates weekly between a fundamental and a hedging perspective on FX."},
+  {area:"Macro & Markets", name:"Currencies Outlook", slug:"currencies-outlook", def:false, freq:"Bi-weekly", desc:"Fundamental analysis of the major currency markets and FX trends."},
   {area:"Macro & Markets", name:"Monthly Chart Pack", slug:"monthly-chart-pack", def:false, freq:"Monthly", desc:"The most relevant macroeconomic graphs across a wide range of economic and market indicators."},
   {area:"Macro & Markets", name:"Gold Report", slug:"gold-report", def:false, freq:"Bi-weekly", desc:"Focuses on the rising importance of gold as an investment."},
   {area:"Asset Allocation", name:"Strategic Asset Allocation", slug:"strategic-asset-allocation", def:false, freq:"Quarterly + monthly themes", desc:"Supports your strategic allocation decisions; monthly themes cover economic, geopolitical and chart-technical trends."},
@@ -85,8 +85,11 @@ const statusEl=document.getElementById('status');
 const btnInsert=document.getElementById('btnInsert');
 let composeItem=null;
 
+function dropFocus(){ try{ if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); }catch(_){} }
+
 Office.onReady(function(info){
   buildGrid();
+  document.querySelectorAll('button').forEach(b=>b.setAttribute('type','button'));
   if(info.host===Office.HostType.Outlook && Office.context.mailbox && Office.context.mailbox.item){
     composeItem=Office.context.mailbox.item;
     prefillRecipient();
@@ -145,9 +148,9 @@ function validate(){
 
 function bulletsHtml(){
   const e=getEmail();
-  const ls='color:#2E75B6;text-decoration:none;font-weight:bold;';
+  const ls='color:#2E75B6;';
   let html='<p><a href="'+urlFor("",e)+'" style="'+ls+'">ECR platform access</a></p><ul>';
-  selected().forEach(r=>html+='<li style="margin:2px 0;"><a href="'+urlFor(r.slug,e)+'" style="'+ls+'">'+r.name+'</a></li>');
+  selected().forEach(r=>html+='<li><a href="'+urlFor(r.slug,e)+'" style="'+ls+'">'+r.name+'</a></li>');
   html+='</ul>';
   return html;
 }
@@ -157,7 +160,7 @@ function insertLinks(){
   statusEl.className='status'; statusEl.textContent='Inserting...';
   composeItem.body.setSelectedDataAsync(bulletsHtml(), {coercionType: Office.CoercionType.Html}, function(res){
     if(res.status===Office.AsyncResultStatus.Succeeded){
-      statusEl.className='status ok'; statusEl.textContent='Links inserted at your cursor.';
+      statusEl.className='status ok'; statusEl.textContent='Links inserted. Click in the email to keep typing.'; dropFocus();
     } else {
       statusEl.className='status err'; statusEl.textContent='Could not insert: '+res.error.message+' — try "Copy selected instead".';
     }
@@ -166,20 +169,21 @@ function insertLinks(){
 
 function buildOverviewHtml(){
   const e=getEmail();
-  const W=560;
-  const reportRow=(r)=>`<tr><td style="padding:9px 0;border-bottom:1px solid #EEF3F8;vertical-align:top;"><a href="${urlFor(r.slug,e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;font-size:14px;">${r.name}</a><div style="color:#666666;font-size:12px;line-height:1.45;margin-top:2px;">${r.desc}</div></td><td style="padding:9px 0 9px 14px;border-bottom:1px solid #EEF3F8;text-align:right;vertical-align:top;color:#888888;font-size:12px;white-space:nowrap;">${r.freq}</td></tr>`;
-  const sectionRow=(t)=>`<tr><td colspan="2" style="padding:14px 0 4px;border-bottom:2px solid #D9E2EC;font-size:12px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#2E75B6;">${t}</td></tr>`;
+  const W=540, TAB=36;
+  const reportRow=(r)=>`<tr><td style="padding:9px 0;border-bottom:1px solid #EEF3F8;">`+
+    `<a href="${urlFor(r.slug,e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;font-size:14px;">${r.name}</a>`+
+    `<div style="color:#666666;font-size:12px;line-height:1.5;margin-top:3px;"><span style="color:#9a9a9a;">${r.freq}.</span> ${r.desc}</div>`+
+    `</td></tr>`;
+  const sectionRow=(t)=>`<tr><td style="padding:14px 0 4px;border-bottom:2px solid #D9E2EC;font-size:12px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#2E75B6;">${t}</td></tr>`;
   let rows='';
   let last='';
-  REPORTS.forEach((r)=>{
-    if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; }
-    rows+=reportRow(r);
-  });
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px;max-width:${W}px;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#1c1c1c;">`+
-    `<tr><td colspan="2" style="padding:0 0 6px;font-size:14px;">An overview of our research, each title linked to your personal access:</td></tr>`+
+  REPORTS.forEach((r)=>{ if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; } rows+=reportRow(r); });
+  const inner=`<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px;max-width:${W}px;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#1c1c1c;">`+
+    `<tr><td style="padding:0 0 6px;font-size:14px;">An overview of our research, each title linked to your personal access:</td></tr>`+
     rows+
-    `<tr><td colspan="2" style="padding:14px 0 0;font-size:14px;"><a href="${urlFor('',e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;">Open the full research platform &#8250;</a></td></tr>`+
+    `<tr><td style="padding:14px 0 0;font-size:14px;"><a href="${urlFor('',e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;">Open the full research platform &#8250;</a></td></tr>`+
     `</table>`;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="${TAB}" style="width:${TAB}px;font-size:1px;line-height:1px;">&#160;</td><td>${inner}</td></tr></table>`;
 }
 
 function insertOverview(){
@@ -188,7 +192,7 @@ function insertOverview(){
   if(!composeItem){ statusEl.className='status err'; statusEl.textContent='Open this from a compose window.'; return; }
   statusEl.className='status'; statusEl.textContent='Inserting overview...';
   composeItem.body.setSelectedDataAsync(buildOverviewHtml(), {coercionType: Office.CoercionType.Html}, function(res){
-    if(res.status===Office.AsyncResultStatus.Succeeded){ statusEl.className='status ok'; statusEl.textContent='Full overview inserted at your cursor.'; }
+    if(res.status===Office.AsyncResultStatus.Succeeded){ statusEl.className='status ok'; statusEl.textContent='Overview inserted. Click in the email to keep typing.'; dropFocus(); }
     else { statusEl.className='status err'; statusEl.textContent='Could not insert: '+res.error.message; }
   });
 }
@@ -200,7 +204,7 @@ function copyBullets(){
   document.body.appendChild(div);
   const range=document.createRange(); range.selectNodeContents(div);
   const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-  try{ document.execCommand('copy'); statusEl.className='status ok'; statusEl.textContent='Copied — paste into the email.'; }
+  try{ document.execCommand('copy'); statusEl.className='status ok'; statusEl.textContent='Copied — paste into the email.'; dropFocus(); }
   catch(e){ statusEl.className='status err'; statusEl.textContent='Copy failed.'; }
   sel.removeAllRanges(); document.body.removeChild(div);
 }
