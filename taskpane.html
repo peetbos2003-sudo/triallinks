@@ -65,16 +65,16 @@
 <script>
 const BASE="https://ecrresearch.com/research";
 const REPORTS=[
-  {area:"Macro & Markets", name:"Global Financial Markets Outlook", slug:"global-financial-markets", def:false, freq:"Bi-weekly"},
-  {area:"Macro & Markets", name:"Interest Rates Outlook", slug:"interest-rates-outlook", def:false, freq:"Bi-weekly"},
-  {area:"Macro & Markets", name:"Currencies Outlook", slug:"currencies-outlook", def:false, freq:"Weekly"},
-  {area:"Macro & Markets", name:"Monthly Chart Pack", slug:"monthly-chart-pack", def:false, freq:"Monthly"},
-  {area:"Macro & Markets", name:"Gold Report", slug:"gold-report", def:false, freq:"Bi-weekly"},
-  {area:"Asset Allocation", name:"Strategic Asset Allocation", slug:"strategic-asset-allocation", def:false, freq:"Quarterly + monthly themes"},
-  {area:"Asset Allocation", name:"Tactical Asset Allocation", slug:"tactical-asset-allocation", def:false, freq:"Monthly"},
-  {area:"Asset Allocation", name:"Quantitative Asset Allocation", slug:"quantitative-asset-allocation", def:false, freq:"Monthly"},
-  {area:"Asset Allocation", name:"Technical Trend Outlook", slug:"technical-trend-outlook", def:false, freq:"Bi-weekly"},
-  {area:"Asset Allocation", name:"Fund Selection", slug:"fund-selection", def:false, freq:"Monthly"},
+  {area:"Macro & Markets", name:"Global Financial Markets Outlook", slug:"global-financial-markets", def:false, freq:"Bi-weekly", desc:"Fundamental analysis of the global financial markets and their consequences."},
+  {area:"Macro & Markets", name:"Interest Rates Outlook", slug:"interest-rates-outlook", def:false, freq:"Bi-weekly", desc:"Fundamental analysis of the global interest-rate markets and central-bank policy."},
+  {area:"Macro & Markets", name:"Currencies Outlook", slug:"currencies-outlook", def:false, freq:"Weekly", desc:"Alternates weekly between a fundamental and a hedging perspective on FX."},
+  {area:"Macro & Markets", name:"Monthly Chart Pack", slug:"monthly-chart-pack", def:false, freq:"Monthly", desc:"The most relevant macroeconomic graphs across a wide range of economic and market indicators."},
+  {area:"Macro & Markets", name:"Gold Report", slug:"gold-report", def:false, freq:"Bi-weekly", desc:"Focuses on the rising importance of gold as an investment."},
+  {area:"Asset Allocation", name:"Strategic Asset Allocation", slug:"strategic-asset-allocation", def:false, freq:"Quarterly + monthly themes", desc:"Supports your strategic allocation decisions; monthly themes cover economic, geopolitical and chart-technical trends."},
+  {area:"Asset Allocation", name:"Tactical Asset Allocation", slug:"tactical-asset-allocation", def:false, freq:"Monthly", desc:"Answers “How would ECR invest?”, with exact over- and underweights per asset class versus the SAA."},
+  {area:"Asset Allocation", name:"Quantitative Asset Allocation", slug:"quantitative-asset-allocation", def:false, freq:"Monthly", desc:"Model combining the consensus of 60 leading global asset managers, actual fund flows and a trend indicator."},
+  {area:"Asset Allocation", name:"Technical Trend Outlook", slug:"technical-trend-outlook", def:false, freq:"Bi-weekly", desc:"The major global equity, bond, commodity, precious-metal and FX markets from a chart-technical perspective."},
+  {area:"Asset Allocation", name:"Fund Selection", slug:"fund-selection", def:false, freq:"Monthly", desc:"Model highlighting the top 30 funds across 13 investment categories."},
 ];
 
 const emailEl=document.getElementById('email');
@@ -145,8 +145,9 @@ function validate(){
 
 function bulletsHtml(){
   const e=getEmail();
-  let html='<p><a href="'+urlFor("",e)+'">ECR platform access</a></p><ul>';
-  selected().forEach(r=>html+='<li><a href="'+urlFor(r.slug,e)+'">'+r.name+'</a></li>');
+  const ls='color:#2E75B6;text-decoration:none;font-weight:bold;';
+  let html='<p><a href="'+urlFor("",e)+'" style="'+ls+'">ECR platform access</a></p><ul>';
+  selected().forEach(r=>html+='<li style="margin:2px 0;"><a href="'+urlFor(r.slug,e)+'" style="'+ls+'">'+r.name+'</a></li>');
   html+='</ul>';
   return html;
 }
@@ -165,8 +166,8 @@ function insertLinks(){
 
 function buildOverviewHtml(){
   const e=getEmail();
-  const W=500;
-  const reportRow=(r)=>`<tr><td style="padding:7px 0;border-bottom:1px solid #EEF3F8;font-size:14px;"><a href="${urlFor(r.slug,e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;">${r.name}</a></td><td style="padding:7px 0;border-bottom:1px solid #EEF3F8;text-align:right;color:#888888;font-size:12px;white-space:nowrap;">${r.freq}</td></tr>`;
+  const W=560;
+  const reportRow=(r)=>`<tr><td style="padding:9px 0;border-bottom:1px solid #EEF3F8;vertical-align:top;"><a href="${urlFor(r.slug,e)}" style="color:#2E75B6;text-decoration:none;font-weight:bold;font-size:14px;">${r.name}</a><div style="color:#666666;font-size:12px;line-height:1.45;margin-top:2px;">${r.desc}</div></td><td style="padding:9px 0 9px 14px;border-bottom:1px solid #EEF3F8;text-align:right;vertical-align:top;color:#888888;font-size:12px;white-space:nowrap;">${r.freq}</td></tr>`;
   const sectionRow=(t)=>`<tr><td colspan="2" style="padding:14px 0 4px;border-bottom:2px solid #D9E2EC;font-size:12px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#2E75B6;">${t}</td></tr>`;
   let rows='';
   let last='';
