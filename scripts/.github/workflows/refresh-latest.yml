@@ -1,0 +1,38 @@
+name: Refresh latest.json
+
+on:
+  schedule:
+    # 06:00 UTC, Monday–Friday  (= 08:00 Amsterdam in summer / 07:00 in winter)
+    # Change the time by editing "0 6"; the 1-5 means Mon–Fri.
+    - cron: '0 6 * * 1-5'
+  workflow_dispatch: {}   # adds a manual "Run workflow" button for testing
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Scrape latest publications and rebuild latest.json
+        env:
+          STAFF_EMAIL: ${{ secrets.STAFF_EMAIL }}
+        run: node scripts/refresh-latest.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add latest.json
+          if git diff --staged --quiet; then
+            echo "No change in latest.json."
+          else
+            git commit -m "Auto-refresh latest.json"
+            git push
+          fi
