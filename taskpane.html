@@ -57,7 +57,8 @@
 
   <button class="insert" id="btnInsert" onclick="insertLinks()" disabled>Insert selected links</button>
   <button class="overview" id="btnOverview" onclick="insertOverview()">Insert full report overview</button>
-  <button class="overview" id="btnLatest" onclick="insertLatest()" style="display:none;">Insert selected + latest publication</button>
+  <button class="overview" id="btnLatest" onclick="insertLatest()">Insert selected + latest publication</button>
+  <div class="hint2" id="latestStamp" style="display:none;"></div>
   <div class="hint2">"Overview" adds every report with its publication frequency, ignoring the ticks above.</div>
   <button class="copy" id="btnCopy" onclick="copyBullets()">Copy selected instead</button>
   <div class="status" id="status"></div>
@@ -85,7 +86,6 @@ const gridEl=document.getElementById('grid');
 const statusEl=document.getElementById('status');
 const btnInsert=document.getElementById('btnInsert');
 let composeItem=null;
-const POWER_USERS=['s.glanz@ecrresearch.com','p.bos@ecrresearch.com'];
 
 function dropFocus(){ try{ if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); }catch(_){} }
 
@@ -95,10 +95,9 @@ Office.onReady(function(info){
   if(info.host===Office.HostType.Outlook && Office.context.mailbox && Office.context.mailbox.item){
     composeItem=Office.context.mailbox.item;
     prefillRecipient();
-    try{
-      var me=((Office.context.mailbox.userProfile||{}).emailAddress||'').toLowerCase();
-      if(POWER_USERS.indexOf(me)>-1){ document.getElementById('btnLatest').style.display='block'; }
-    }catch(_){}
+    fetch('latest.json?ts='+Date.now()).then(r=>r.json()).then(function(d){
+      if(d && d.updated){ var s=document.getElementById('latestStamp'); s.textContent='Publication list updated '+d.updated; s.style.display='block'; }
+    }).catch(function(){});
   }
   emailEl.addEventListener('input',validate);
   validate();
@@ -212,13 +211,14 @@ function insertLatest(){
   statusEl.className='status'; statusEl.textContent='Fetching latest publications...';
   fetch('latest.json?ts='+Date.now()).then(r=>r.json()).then(data=>{
     const reps=data.reports||{};
-    let html='';
+    let inner='';
     sel.forEach(r=>{
       const link='<a href="'+urlFor(r.slug,e)+'" style="color:#2E75B6;">'+r.name+'</a>';
       const d=reps[r.slug];
-      if(d){ html+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+': '+d.title+'. <span style="color:#888888;">'+d.date+', written by '+d.author+'</span></p>'; }
-      else { html+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+'</p>'; }
+      if(d){ inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+': '+d.title+'. <span style="color:#888888;">'+d.date+', written by '+d.author+'</span></p>'; }
+      else { inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+'</p>'; }
     });
+    const html='<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="36" style="width:36px;font-size:1px;line-height:1px;">&#160;</td><td>'+inner+'</td></tr></table>';
     composeItem.body.setSelectedDataAsync(html, {coercionType: Office.CoercionType.Html}, function(res){
       if(res.status===Office.AsyncResultStatus.Succeeded){ statusEl.className='status ok'; statusEl.textContent='Inserted (list dated '+data.updated+'). Click in the email to keep typing.'; dropFocus(); }
       else { statusEl.className='status err'; statusEl.textContent='Could not insert: '+res.error.message; }
