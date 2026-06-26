@@ -3,7 +3,7 @@ name: Refresh latest.json
 on:
   schedule:
     # 06:00 UTC, Monday–Friday  (= 08:00 Amsterdam in summer / 07:00 in winter)
-    # Change the time by editing "0 6"; the 1-5 means Mon–Fri.
+      # Change the time by editing "0 6"; the 1-5 means Mon–Fri.
     - cron: '17 5 * * 1-5'
     workflow_dispatch: {}   # adds a manual "Run workflow" button for testing
 
