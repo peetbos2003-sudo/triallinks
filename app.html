@@ -77,7 +77,7 @@ const REPORTS=[
   {area:"Asset Allocation", name:"Quantitative Asset Allocation", slug:"quantitative-asset-allocation", def:false, freq:"Monthly", desc:"Model combining the consensus of 60 leading global asset managers, actual fund flows and a trend indicator."},
   {area:"Asset Allocation", name:"Technical Trend Outlook", slug:"technical-trend-outlook", def:false, freq:"Bi-weekly", desc:"The major global equity, bond, commodity, precious-metal and FX markets from a chart-technical perspective."},
   {area:"Asset Allocation", name:"Fund Selection", slug:"fund-selection", def:false, freq:"Monthly", desc:"Model highlighting the top 30 funds across 13 investment categories."},
-  {area:"Newsletter", name:"Eddy's Weekly Market Insight", slug:"market-insight/eddys-weekly-market-insight", def:false, freq:"Weekly", desc:"Our weekly newsletter on what is moving the markets, straight from the ECR homepage."},
+  {area:"Newsletter", name:"Eddy's Weekly Market Insight", key:"eddys-weekly-market-insight", slug:"market-insight/eddys-weekly-market-insight", def:false, freq:"Weekly", desc:"Our weekly newsletter on what is moving the markets, straight from the ECR homepage."},
 ];
 
 const emailEl=document.getElementById('email');
@@ -87,6 +87,7 @@ const gridEl=document.getElementById('grid');
 const statusEl=document.getElementById('status');
 const btnInsert=document.getElementById('btnInsert');
 let composeItem=null;
+let LATEST=null; // parsed latest.json — may carry a per-report "slug" override (e.g. the current Eddy edition)
 
 function dropFocus(){ try{ if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); }catch(_){} }
 
@@ -97,6 +98,7 @@ Office.onReady(function(info){
     composeItem=Office.context.mailbox.item;
     prefillRecipient();
     fetch('latest.json?ts='+Date.now()).then(r=>r.json()).then(function(d){
+      LATEST=d;
       if(d && d.updated){ var s=document.getElementById('latestStamp'); s.textContent='Publication list updated '+d.updated; s.style.display='block'; }
     }).catch(function(){});
   }
@@ -139,7 +141,11 @@ function useRecipient(){ if(composeItem){ emailEl.value=''; prefillRecipient(); 
 function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 function getEmail(){ return emailEl.value.trim().toLowerCase(); }
 function urlFor(slug,email){ const q="?email="+encodeURIComponent(email); return slug===""? BASE+q : BASE+"/"+slug+q; }
-function linkFor(r,email){ return r.url ? r.url+"?email="+encodeURIComponent(email) : urlFor(r.slug,email); }
+function linkFor(r,email){
+  if(r.url) return r.url+"?email="+encodeURIComponent(email);
+  const ov=LATEST && LATEST.reports && LATEST.reports[r.key||r.slug];
+  return urlFor((ov && ov.slug) || r.slug, email);
+}
 function selected(){ const o=[]; document.querySelectorAll('#grid input:checked').forEach(c=>o.push(REPORTS[c.dataset.i])); return o; }
 
 function validate(){
@@ -212,11 +218,12 @@ function insertLatest(){
   if(!composeItem){ statusEl.className='status err'; statusEl.textContent='Open this from a compose window.'; return; }
   statusEl.className='status'; statusEl.textContent='Fetching latest publications...';
   fetch('latest.json?ts='+Date.now()).then(r=>r.json()).then(data=>{
+    LATEST=data;
     const reps=data.reports||{};
     let inner='';
     sel.forEach(r=>{
       const link='<a href="'+linkFor(r,e)+'" style="color:#2E75B6;">'+r.name+'</a>';
-      const d=reps[r.slug];
+      const d=reps[r.key||r.slug];
       if(d){ inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+': '+d.title+'. <span style="color:#888888;">'+d.date+', written by '+d.author+'</span></p>'; }
       else { inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+'</p>'; }
     });
