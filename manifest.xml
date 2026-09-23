@@ -13,13 +13,13 @@
   xsi:type="MailApp">
 
   <Id>b2f7c4e1-9a3d-4e62-bf10-3c7a9d2e51aa</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.0.0.2</Version>
   <ProviderName>ECR Research</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="ECR Trial Links" />
   <Description DefaultValue="Insert personalized ECR Research trial links into a prospect email." />
-  <IconUrl DefaultValue="https://peetbos2003-sudo.github.io/triallinks/assets/icon-64.png" />
-  <HighResolutionIconUrl DefaultValue="https://peetbos2003-sudo.github.io/triallinks/assets/icon-128.png" />
+  <IconUrl DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icon-64.png" />
+  <HighResolutionIconUrl DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icon-128.png" />
   <SupportUrl DefaultValue="https://ecrresearch.com/contact" />
 
   <Hosts>
@@ -33,10 +33,9 @@
   </Requirements>
 
   <FormSettings>
-    <Form xsi:type="ItemRead">
+    <Form xsi:type="ItemEdit">
       <DesktopSettings>
         <SourceLocation DefaultValue="https://peetbos2003-sudo.github.io/triallinks/taskpane.html" />
-        <RequestedHeight>250</RequestedHeight>
       </DesktopSettings>
     </Form>
   </FormSettings>
@@ -89,9 +88,9 @@
 
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/assets/icon-16.png" />
-        <bt:Image id="Icon.32" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/assets/icon-32.png" />
-        <bt:Image id="Icon.80" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/assets/icon-80.png" />
+        <bt:Image id="Icon.16" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icon-16.png" />
+        <bt:Image id="Icon.32" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icon-32.png" />
+        <bt:Image id="Icon.80" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icon-80.png" />
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Taskpane.Url" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/taskpane.html" />
