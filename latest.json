@@ -1,15 +1,15 @@
 {
-  "updated": "2026-06-23",
+  "updated": "2026-09-23",
   "reports": {
-    "global-financial-markets": { "title": "Oil prices fall, but the risk of inflation remains", "date": "Thursday, 18 June 2026", "author": "Edward Markus" },
-    "interest-rates-outlook": { "title": "The Economic Implications of Higher Real Interest Rates", "date": "Wednesday, 10 June 2026", "author": "Maarten Spek" },
-    "currencies-outlook": { "title": "End of the Strait of Hormuz blockade means greater volatility in currency markets", "date": "Thursday, 11 June 2026", "author": "Edward Markus" },
-    "monthly-chart-pack": { "title": "Monthly Chart Pack - June 2026", "date": "Tuesday, 02 June 2026", "author": "Henk-Jan Pijper" },
-    "gold-report": { "title": "Real rates, not inflation, important for gold prices", "date": "Monday, 15 June 2026", "author": "Edward Markus" },
-    "strategic-asset-allocation": { "title": "SAA Special: Gold vs Bitcoin as a portfolio diversifier", "date": "Monday, 18 May 2026", "author": "Maarten Spek" },
-    "tactical-asset-allocation": { "title": "Is the end of the bull market in sight?", "date": "Wednesday, 27 May 2026", "author": "Maarten Spek" },
-    "quantitative-asset-allocation": { "title": "Money Talks, Money Walks - June 2026", "date": "Monday, 08 June 2026", "author": "Eelco Ubbels" },
-    "technical-trend-outlook": { "title": "Nikkei 225: The final surge?", "date": "Thursday, 18 June 2026", "author": "Henk-Jan Pijper" },
-    "fund-selection": { "title": "Fund Selection Model | Q2 2026", "date": "Wednesday, 15 April 2026", "author": "Eelco Ubbels" }
+    "global-financial-markets": { "title": "AI will have to make up for a great deal of negativity", "date": "Thursday, 10 September 2026", "author": "Edward Markus" },
+    "interest-rates-outlook": { "title": "Oil markets are forcing rate hikes", "date": "Thursday, 17 September 2026", "author": "Maarten Spek" },
+    "currencies-outlook": { "title": "Carry trades, political risks, and energy prices could shake up sluggish currency markets", "date": "Thursday, 17 September 2026", "author": "Edward Markus" },
+    "monthly-chart-pack": { "title": "Monthly Chart Pack - September 2026", "date": "Thursday, 03 September 2026", "author": "Henk-Jan Pijper" },
+    "gold-report": { "title": "What stands between gold and its next leg up", "date": "Monday, 21 September 2026", "author": "Edward Markus" },
+    "strategic-asset-allocation": { "title": "SAA special Equities: Can the past decade be repeated?", "date": "Tuesday, 15 September 2026", "author": "Henk-Jan Pijper" },
+    "tactical-asset-allocation": { "title": "Betting on a perpetuum mobile", "date": "Tuesday, 25 August 2026", "author": "Maarten Spek" },
+    "quantitative-asset-allocation": { "title": "Money Talks, Money Walks - September 2026", "date": "Monday, 14 September 2026", "author": "Eelco Ubbels" },
+    "technical-trend-outlook": { "title": "Energy complex at a breakout point?", "date": "Thursday, 10 September 2026", "author": "Henk-Jan Pijper" },
+    "fund-selection": { "title": "Fund Selection Model | Q3 2026", "date": "Wednesday, 15 July 2026", "author": "Eelco Ubbels" }
   }
 }

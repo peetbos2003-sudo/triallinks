@@ -121,8 +121,13 @@ The report list, slugs, frequencies and descriptions live in the `REPORTS` array
 report, edit that array (and `latest.json`) and redeploy. (Global Political Analysis was removed
 here as it is being phased out for new prospects.)
 
-An entry may carry a `url` field: that full address is then used (with `?email=` appended)
-instead of the standard `https://ecrresearch.com/research/<slug>` pattern. **Eddy's Weekly
-Market Update** (added 23 Sep 2026, under its own "Newsletter" heading) uses this — it is a
-weekly newsletter on the ECR homepage, not a report, so it has no `/research/` page and no
-`latest.json` entry (the "latest publication" button inserts it as a plain link).
+**Eddy's Weekly Market Insight** (added 23 Sep 2026, under its own "Newsletter" heading) is a
+weekly newsletter, not a report. On the research platform it lives at the nested slug
+`market-insight/eddys-weekly-market-insight`, and the standard `?email=` access key works on it.
+Do NOT link the public homepage version (`/en/market-insight/eddys-wekelijkse-marktupdate`) —
+that page ignores the email key and shows prospects "access denied". It has no `latest.json`
+entry, so the "latest publication" button inserts it as a plain link.
+
+An entry in `REPORTS` may also carry a `url` field: that full address is then used (with
+`?email=` appended) instead of the standard `https://ecrresearch.com/research/<slug>` pattern —
+for anything personalised that ever lives outside `/research/`.
