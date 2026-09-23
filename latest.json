@@ -1,15 +1,55 @@
 {
   "updated": "2026-09-23",
   "reports": {
-    "global-financial-markets": { "title": "AI will have to make up for a great deal of negativity", "date": "Thursday, 10 September 2026", "author": "Edward Markus" },
-    "interest-rates-outlook": { "title": "Oil markets are forcing rate hikes", "date": "Thursday, 17 September 2026", "author": "Maarten Spek" },
-    "currencies-outlook": { "title": "Carry trades, political risks, and energy prices could shake up sluggish currency markets", "date": "Thursday, 17 September 2026", "author": "Edward Markus" },
-    "monthly-chart-pack": { "title": "Monthly Chart Pack - September 2026", "date": "Thursday, 03 September 2026", "author": "Henk-Jan Pijper" },
-    "gold-report": { "title": "What stands between gold and its next leg up", "date": "Monday, 21 September 2026", "author": "Edward Markus" },
-    "strategic-asset-allocation": { "title": "SAA special Equities: Can the past decade be repeated?", "date": "Tuesday, 15 September 2026", "author": "Henk-Jan Pijper" },
-    "tactical-asset-allocation": { "title": "Betting on a perpetuum mobile", "date": "Tuesday, 25 August 2026", "author": "Maarten Spek" },
-    "quantitative-asset-allocation": { "title": "Money Talks, Money Walks - September 2026", "date": "Monday, 14 September 2026", "author": "Eelco Ubbels" },
-    "technical-trend-outlook": { "title": "Energy complex at a breakout point?", "date": "Thursday, 10 September 2026", "author": "Henk-Jan Pijper" },
-    "fund-selection": { "title": "Fund Selection Model | Q3 2026", "date": "Wednesday, 15 July 2026", "author": "Eelco Ubbels" }
+    "global-financial-markets": {
+      "title": "AI will have to make up for a great deal of negativity",
+      "date": "Thursday, 10 September 2026",
+      "author": "Edward Markus"
+    },
+    "interest-rates-outlook": {
+      "title": "Oil markets are forcing rate hikes",
+      "date": "Thursday, 17 September 2026",
+      "author": "Maarten Spek"
+    },
+    "currencies-outlook": {
+      "title": "Carry trades, political risks, and energy prices could shake up sluggish currency markets",
+      "date": "Thursday, 17 September 2026",
+      "author": "Edward Markus"
+    },
+    "monthly-chart-pack": {
+      "title": "Monthly Chart Pack - September 2026",
+      "date": "Thursday, 03 September 2026",
+      "author": "Henk-Jan Pijper"
+    },
+    "gold-report": {
+      "title": "What stands between gold and its next leg up",
+      "date": "Monday, 21 September 2026",
+      "author": "Edward Markus"
+    },
+    "strategic-asset-allocation": {
+      "title": "SAA special Equities: Can the past decade be repeated?",
+      "date": "Tuesday, 15 September 2026",
+      "author": "Henk-Jan Pijper"
+    },
+    "tactical-asset-allocation": {
+      "title": "Betting on a perpetuum mobile",
+      "date": "Tuesday, 25 August 2026",
+      "author": "Maarten Spek"
+    },
+    "quantitative-asset-allocation": {
+      "title": "Money Talks, Money Walks - September 2026",
+      "date": "Monday, 14 September 2026",
+      "author": "Eelco Ubbels"
+    },
+    "technical-trend-outlook": {
+      "title": "Energy complex at a breakout point?",
+      "date": "Thursday, 10 September 2026",
+      "author": "Henk-Jan Pijper"
+    },
+    "fund-selection": {
+      "title": "Fund Selection Model | Q3 2026",
+      "date": "Wednesday, 15 July 2026",
+      "author": "Eelco Ubbels"
+    }
   }
 }
