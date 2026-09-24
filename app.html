@@ -77,10 +77,10 @@ const REPORTS=[
   {area:"Asset Allocation", name:"Quantitative Asset Allocation", slug:"quantitative-asset-allocation", def:false, freq:"Monthly", desc:"Model combining the consensus of 60 leading global asset managers, actual fund flows and a trend indicator."},
   {area:"Asset Allocation", name:"Technical Trend Outlook", slug:"technical-trend-outlook", def:false, freq:"Bi-weekly", desc:"The major global equity, bond, commodity, precious-metal and FX markets from a chart-technical perspective."},
   {area:"Asset Allocation", name:"Fund Selection", slug:"fund-selection", def:false, freq:"Monthly", desc:"Model highlighting the top 30 funds across 13 investment categories."},
-  // Eddy uses the site's own evergreen redirect (/r?to=…) — the same link the newsletter
-  // mailing sends — which always resolves to the NEWEST edition. No maintenance needed.
-  // key + slug stay only as the latest.json title lookup and a fallback; the url wins.
-  {area:"Newsletter", name:"Eddy's Weekly Market Insight", key:"eddys-weekly-market-insight", slug:"market-insight/eddys-weekly-market-insight", url:"https://ecrresearch.com/r?to=/research/eddys-weekly-market-insight", def:false, freq:"Weekly", desc:"Our weekly newsletter on what is moving the markets, straight from the ECR homepage."},
+  // Eddy links to the personalised weekly-overview page (changed 24 Sep 2026). The prospect's
+  // email is appended as the access key (?email=…) exactly like the other links, so the page
+  // is personal. key + slug stay only as the latest.json title/date lookup; the url wins.
+  {area:"Newsletter", name:"Eddy's Weekly Market Insight", key:"eddys-weekly-market-insight", slug:"market-insight/eddys-weekly-market-insight", url:"https://ecrresearch.com/weekly-overview", def:false, freq:"Weekly", desc:"Our weekly newsletter on what is moving the markets, straight from the ECR homepage."},
 ];
 
 const emailEl=document.getElementById('email');
@@ -145,7 +145,7 @@ function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
 function getEmail(){ return emailEl.value.trim().toLowerCase(); }
 function urlFor(slug,email){ const q="?email="+encodeURIComponent(email); return slug===""? BASE+q : BASE+"/"+slug+q; }
 function linkFor(r,email){
-  if(r.url) return r.url+"?email="+encodeURIComponent(email);
+  if(r.url) return r.url+(r.url.indexOf('?')>-1?'&':'?')+"email="+encodeURIComponent(email);
   const ov=LATEST && LATEST.reports && LATEST.reports[r.key||r.slug];
   return urlFor((ov && ov.slug) || r.slug, email);
 }

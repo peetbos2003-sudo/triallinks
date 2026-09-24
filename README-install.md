@@ -122,11 +122,20 @@ report, edit that array (and `latest.json`) and redeploy. (Global Political Anal
 here as it is being phased out for new prospects.)
 
 **Eddy's Weekly Market Insight** (added 23 Sep 2026, under its own "Newsletter" heading) is a
-weekly newsletter, not a report. On the research platform it lives at the nested slug
-`market-insight/eddys-weekly-market-insight`, and the standard `?email=` access key works on it.
-Do NOT link the public homepage version (`/en/market-insight/eddys-wekelijkse-marktupdate`) —
-that page ignores the email key and shows prospects "access denied". It has no `latest.json`
-entry, so the "latest publication" button inserts it as a plain link.
+weekly newsletter, not a report. Since 24 Sep 2026 it links to the **weekly-overview page**
+(`https://ecrresearch.com/weekly-overview`), which always shows the current edition. The
+prospect's email is appended as the personal access key, exactly like the other links, so the
+inserted link looks like `https://ecrresearch.com/weekly-overview?email=name@company.com`.
+Three notes:
+
+1. Because the weekly-overview page is evergreen, **no weekly maintenance is needed for the
+   Eddy link** — neither app.html nor latest.json.
+2. The `eddys-weekly-market-insight` entry in `latest.json` still supplies the edition's
+   title, date and author for the "Insert selected + latest publication" button, so keep
+   refreshing it if you want those blurbs current. Its `slug` field no longer affects the
+   link (the `url` field in `REPORTS` wins).
+3. Do NOT link the public homepage version (`/en/market-insight/eddys-wekelijkse-marktupdate`) —
+   that page ignores the email key and shows prospects "access denied".
 
 An entry in `REPORTS` may also carry a `url` field: that full address is then used (with
 `?email=` appended) instead of the standard `https://ecrresearch.com/research/<slug>` pattern —
