@@ -121,8 +121,10 @@ The report list, slugs, frequencies and descriptions live in the `REPORTS` array
 report, edit that array (and `latest.json`) and redeploy. (Global Political Analysis was removed
 here as it is being phased out for new prospects.)
 
-**Eddy's Weekly Market Insight** (added 23 Sep 2026, under its own "Newsletter" heading) is a
-weekly newsletter, not a report. Since 24 Sep 2026 it links to the **weekly-overview page**
+**Eddy's Weekly Market Insight** (added 23 Sep 2026, under its own "Newsletter (for Corporates)"
+heading) is a weekly newsletter, not a report. It is deliberately **excluded from "Insert full
+report overview"** (the `noOverview` flag on its `REPORTS` entry, 28 Sep 2026) — it can still be
+ticked and inserted like any other link. Since 24 Sep 2026 it links to the **weekly-overview page**
 (`https://ecrresearch.com/weekly-overview`), which always shows the current edition. The
 prospect's email is appended as the personal access key, exactly like the other links, so the
 inserted link looks like `https://ecrresearch.com/weekly-overview?email=name@company.com`.
