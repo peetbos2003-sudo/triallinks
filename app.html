@@ -59,7 +59,7 @@
   <button class="overview" id="btnOverview" onclick="insertOverview()">Insert full report overview</button>
   <button class="overview" id="btnLatest" onclick="insertLatest()">Insert selected + latest publication</button>
   <div class="hint2" id="latestStamp" style="display:none;"></div>
-  <div class="hint2">"Overview" adds every report with its publication frequency, ignoring the ticks above.</div>
+  <div class="hint2">"Overview" adds every report with its publication frequency, ignoring the ticks above. The newsletter is not included.</div>
   <button class="copy" id="btnCopy" onclick="copyBullets()">Copy selected instead</button>
   <div class="status" id="status"></div>
 </div>
@@ -80,7 +80,8 @@ const REPORTS=[
   // Eddy links to the personalised weekly-overview page (changed 24 Sep 2026). The prospect's
   // email is appended as the access key (?email=…) exactly like the other links, so the page
   // is personal. key + slug stay only as the latest.json title/date lookup; the url wins.
-  {area:"Newsletter", name:"Eddy's Weekly Market Insight", key:"eddys-weekly-market-insight", slug:"market-insight/eddys-weekly-market-insight", url:"https://ecrresearch.com/weekly-overview", def:false, freq:"Weekly", desc:"Our weekly newsletter on what is moving the markets, straight from the ECR homepage."},
+  // noOverview keeps the newsletter out of "Insert full report overview" (28 Sep 2026).
+  {area:"Newsletter (for Corporates)", name:"Eddy's Weekly Market Insight", key:"eddys-weekly-market-insight", slug:"market-insight/eddys-weekly-market-insight", url:"https://ecrresearch.com/weekly-overview", def:false, freq:"Weekly", noOverview:true, desc:"Our weekly newsletter on what is moving the markets, straight from the ECR homepage."},
 ];
 
 const emailEl=document.getElementById('email');
@@ -112,7 +113,7 @@ Office.onReady(function(info){
 function buildGrid(){
   let last="";
   REPORTS.forEach((r,i)=>{
-    if(r.area!==last){ const a=document.createElement('div'); a.className='area'; a.textContent=r.area; gridEl.appendChild(a); last=r.area; }
+    if(r.area!==last){ const a=document.createElement('div'); a.className='area'; a.innerHTML=r.area.replace(/\(([^)]*)\)/,'<span style="text-transform:none;">($1)</span>'); gridEl.appendChild(a); last=r.area; }
     const lab=document.createElement('label'); lab.className='chk';
     lab.innerHTML='<input type="checkbox" data-i="'+i+'"> <span>'+r.name+'</span>';
     lab.querySelector('input').addEventListener('change',validate);
@@ -193,7 +194,7 @@ function buildOverviewHtml(){
   const sectionRow=(t)=>`<tr><td style="padding:14px 0 4px;border-bottom:2px solid #D9E2EC;font-size:10pt;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#97C0E9;">${t}</td></tr>`;
   let rows='';
   let last='';
-  REPORTS.forEach((r)=>{ if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; } rows+=reportRow(r); });
+  REPORTS.forEach((r)=>{ if(r.noOverview) return; if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; } rows+=reportRow(r); });
   const inner=`<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px;max-width:${W}px;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#1c1c1c;">`+
     `<tr><td style="padding:0 0 6px;font-size:14px;">An overview of our research, each title linked to your personal access:</td></tr>`+
     rows+
