@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Scrape latest publications and rebuild latest.json
+      - name: Scrape latest publications and rebuild latest.json + icc/latest.json
         env:
           STAFF_EMAIL: ${{ secrets.STAFF_EMAIL }}
         run: node scripts/refresh-latest.mjs
@@ -29,21 +29,26 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- latest.json; then
-            echo "No change in latest.json."
+          # Two files: ECR (root) and ICC (icc/). Untracked icc/latest.json counts as a change too.
+          if git diff --quiet -- latest.json icc/latest.json && [ -z "$(git status --porcelain -- icc/latest.json)" ]; then
+            echo "No change in latest.json or icc/latest.json."
             exit 0
           fi
-          cp latest.json /tmp/latest.json
+          mkdir -p /tmp/refresh/icc
+          cp latest.json /tmp/refresh/latest.json
+          cp icc/latest.json /tmp/refresh/icc/latest.json
           for i in 1 2 3 4 5; do
             git fetch origin main
             git reset --hard origin/main
-            cp /tmp/latest.json latest.json
-            git add latest.json
+            mkdir -p icc
+            cp /tmp/refresh/latest.json latest.json
+            cp /tmp/refresh/icc/latest.json icc/latest.json
+            git add latest.json icc/latest.json
             if git diff --staged --quiet; then
               echo "Remote already up to date."
               exit 0
             fi
-            git commit -m "Auto-refresh latest.json"
+            git commit -m "Auto-refresh latest.json (ECR + ICC)"
             if git push origin HEAD:main; then
               echo "Pushed."
               exit 0
