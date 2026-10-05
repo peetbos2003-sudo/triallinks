@@ -228,7 +228,8 @@ function insertLatest(){
     sel.forEach(r=>{
       const link='<a href="'+linkFor(r,e)+'" style="color:#2E75B6;">'+r.name+'</a>';
       const d=reps[r.key||r.slug];
-      if(d){ inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+': '+d.title+'. <span style="color:#888888;">'+d.date+', written by '+d.author+'</span></p>'; }
+      const t=String(d&&d.title||'').trim(); const tEnd=/[.?!…]$/.test(t)?'':'.'; // no "?." after a question headline
+      if(d){ inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+': '+t+tEnd+' <span style="color:#888888;">'+d.date+', written by '+d.author+'</span></p>'; }
       else { inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+'</p>'; }
     });
     const html='<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="36" style="width:36px;font-size:1px;line-height:1px;">&#160;</td><td>'+inner+'</td></tr></table>';
