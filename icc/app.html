@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICC Trial Links</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<style>
+  /* ICC brand: the three faces of the hexagon logo */
+  :root{ --dark:#5E3176; --mid:#83628F; --soft:#AF98B5; --light:#E3D9E8; --lighter:#F4EFF6; --grey:#666; --ok:#2e7d32; color-scheme:light; }
+  *{box-sizing:border-box}
+  body{font-family:'Segoe UI',Arial,sans-serif;color:#1c1c1c;margin:0;background:#fff;font-size:13px;}
+  .wrap{padding:14px 14px 30px;}
+  .brand{display:flex;align-items:center;gap:8px;margin:0 0 2px;}
+  .brand img{width:22px;height:22px;}
+  h1{color:var(--dark);font-size:16px;margin:0;}
+  .sub{color:var(--grey);font-size:11px;margin:4px 0 12px;}
+  label.fld{display:block;font-weight:600;color:var(--dark);font-size:11px;margin-bottom:4px;}
+  input[type=email]{width:100%;font-size:14px;padding:8px 10px;border:2px solid var(--light);border-radius:6px;outline:none;}
+  input[type=email]:focus{border-color:var(--mid);}
+  .recip{font-size:11px;color:var(--grey);margin:5px 0 0;}
+  .recip b{color:var(--dark);}
+  .warn{color:#b00000;font-size:11px;margin-top:5px;min-height:14px;}
+  .toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 4px;}
+  button{font-family:inherit;border:none;border-radius:6px;cursor:pointer;}
+  .ghost{background:var(--lighter);color:var(--dark);border:1px solid var(--light);font-size:11px;padding:5px 9px;}
+  .area{color:var(--mid);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin:10px 0 2px;}
+  .chk{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:3px 0;cursor:pointer;}
+  .chk input{width:15px;height:15px;accent-color:var(--dark);}
+  .insert{background:var(--dark);color:#fff;font-weight:700;font-size:13px;padding:11px 14px;width:100%;margin-top:14px;}
+  .insert:disabled{background:#c2b0c9;cursor:default;}
+  .copy{background:var(--lighter);color:var(--dark);border:1px solid var(--light);font-weight:600;font-size:12px;padding:8px 12px;width:100%;margin-top:8px;}
+  .overview{background:#fff;color:var(--dark);border:1px solid var(--mid);font-weight:600;font-size:13px;padding:10px 14px;width:100%;margin-top:8px;}
+  .hint2{font-size:11px;color:var(--grey);margin-top:6px;text-align:center;}
+  .status{font-size:11px;margin-top:8px;min-height:15px;}
+  .status.ok{color:var(--ok);font-weight:600;}
+  .status.err{color:#b00000;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><img src="icon-32.png" alt=""><h1>ICC Trial Links</h1></div>
+  <div class="sub">Kies de rapporten en voeg gepersonaliseerde links in deze e-mail in. Het e-mailadres van de prospect is de toegangssleutel.</div>
+
+  <label class="fld" for="email">E-mailadres prospect</label>
+  <input type="email" id="email" placeholder="naam@bedrijf.nl" autocomplete="off" spellcheck="false">
+  <div class="recip" id="recip"></div>
+  <div class="warn" id="warn"></div>
+
+  <div class="toolbar">
+    <button class="ghost" onclick="useRecipient()">Gebruik ontvanger</button>
+    <button class="ghost" onclick="setAll(true)">Alles</button>
+    <button class="ghost" onclick="setAll(false)">Geen</button>
+  </div>
+  <div id="grid"></div>
+
+  <button class="insert" id="btnInsert" onclick="insertLinks()" disabled>Geselecteerde links invoegen</button>
+  <button class="overview" id="btnOverview" onclick="insertOverview()">Volledig rapportoverzicht invoegen</button>
+  <button class="overview" id="btnLatest" onclick="insertLatest()">Selectie + laatste publicatie invoegen</button>
+  <div class="hint2" id="latestStamp" style="display:none;"></div>
+  <div class="hint2">"Overzicht" voegt alle rapporten in met hun verschijningsfrequentie, los van de vinkjes. De Weekupdate zit er niet in.</div>
+  <button class="copy" id="btnCopy" onclick="copyBullets()">Of kopieer de selectie</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+const BASE="https://icc-consultants.nl/nl";
+// Every link is BASE + "/" + slug + "?email=<prospect>". The ICC pages are evergreen (always the
+// current edition), so no per-edition slugs are needed. key = lookup in latest.json.
+// noOverview keeps an item out of "Volledig rapportoverzicht invoegen".
+const REPORTS=[
+  {area:"Rapporten", name:"ICC Renterapport", key:"icc-renterapport", slug:"research/icc-renterapport", freq:"Tweewekelijks", desc:"Fundamentele analyse van de Europese en Amerikaanse rentemarkten en het beleid van de centrale banken, met concrete verwachtingen voor onder meer EURIBOR, SOFR en de swaprentes."},
+  {area:"Rapporten", name:"ICC Valutarapport", key:"icc-valutarapport", slug:"research/icc-valutarapport", freq:"Tweewekelijks", desc:"Analyse van de belangrijkste valutamarkten, met verwachtingen voor EUR/USD, EUR/GBP en de andere relevante valuta's voor uw hedgingbeslissingen."},
+  {area:"Rapporten", name:"ICC Global Financial Markets", key:"icc-global-financial-markets", slug:"research/icc-global-financial-markets", freq:"Tweewekelijks", desc:"Fundamentele analyse van de wereldwijde financiële markten en wat de grote economische en geopolitieke ontwikkelingen betekenen voor rente, valuta en beleggingen."},
+  {area:"Nieuwsbrief van Eddy Markus", name:"Weekupdate voor CFO's & treasurers", key:"weekupdate-voor-cfos-treasurers", slug:"weekupdate-voor-cfos-treasurers", freq:"Wekelijks", noOverview:true, desc:"Elke zaterdagochtend in enkele minuten de kern van de markt. Met concrete rente- en valutavoorspellingen voor uw hedgingbeslissingen."},
+];
+
+const emailEl=document.getElementById('email');
+const warnEl=document.getElementById('warn');
+const recipEl=document.getElementById('recip');
+const gridEl=document.getElementById('grid');
+const statusEl=document.getElementById('status');
+const btnInsert=document.getElementById('btnInsert');
+let composeItem=null;
+
+function dropFocus(){ try{ if(document.activeElement && document.activeElement.blur) document.activeElement.blur(); }catch(_){} }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+Office.onReady(function(info){
+  buildGrid();
+  document.querySelectorAll('button').forEach(b=>b.setAttribute('type','button'));
+  if(info.host===Office.HostType.Outlook && Office.context.mailbox && Office.context.mailbox.item){
+    composeItem=Office.context.mailbox.item;
+    prefillRecipient();
+    fetch('latest.json?ts='+Date.now()).then(r=>r.json()).then(function(d){
+      if(d && d.updated){ var s=document.getElementById('latestStamp'); s.textContent='Publicatielijst bijgewerkt op '+d.updated; s.style.display='block'; }
+    }).catch(function(){});
+  }
+  emailEl.addEventListener('input',validate);
+  validate();
+});
+
+function buildGrid(){
+  let last="";
+  REPORTS.forEach((r,i)=>{
+    if(r.area!==last){ const a=document.createElement('div'); a.className='area'; a.textContent=r.area; gridEl.appendChild(a); last=r.area; }
+    const lab=document.createElement('label'); lab.className='chk';
+    lab.innerHTML='<input type="checkbox" data-i="'+i+'"> <span>'+esc(r.name)+'</span>';
+    lab.querySelector('input').addEventListener('change',validate);
+    gridEl.appendChild(lab);
+  });
+}
+function setAll(v){ document.querySelectorAll('#grid input').forEach(c=>c.checked=v); validate(); }
+
+function prefillRecipient(){
+  try{
+    composeItem.to.getAsync(function(res){
+      if(res.status===Office.AsyncResultStatus.Succeeded && res.value && res.value.length){
+        const addr=res.value[0].emailAddress||"";
+        recipEl.innerHTML='Ontvanger: <b>'+(esc(addr)||'(nog geen)')+'</b>';
+        if(addr && !emailEl.value){ emailEl.value=addr; validate(); }
+      } else {
+        recipEl.textContent='Voeg een ontvanger toe en klik dan op "Gebruik ontvanger".';
+      }
+    });
+  }catch(e){ recipEl.textContent=''; }
+}
+function useRecipient(){ if(composeItem){ emailEl.value=''; prefillRecipient(); } }
+
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function getEmail(){ return emailEl.value.trim().toLowerCase(); }
+function linkFor(r,email){
+  const u = r.url || (BASE+"/"+r.slug);
+  return u+(u.indexOf('?')>-1?'&':'?')+"email="+encodeURIComponent(email);
+}
+function selected(){ const o=[]; document.querySelectorAll('#grid input:checked').forEach(c=>o.push(REPORTS[c.dataset.i])); return o; }
+
+function validate(){
+  const e=getEmail(); const sel=selected();
+  let ok=true;
+  if(!e){ warnEl.textContent=""; ok=false; }
+  else if(!validEmail(e)){ warnEl.textContent="Dit lijkt geen geldig e-mailadres."; ok=false; }
+  else warnEl.textContent="";
+  if(ok && sel.length===0){ ok=false; }
+  btnInsert.disabled=!ok;
+  return ok;
+}
+
+function bulletsHtml(){
+  const e=getEmail();
+  const ls='color:#5E3176;font-size:11pt;';
+  let html='<ul style="font-size:11pt;margin:4px 0;">';
+  selected().forEach(r=>html+='<li><a href="'+linkFor(r,e)+'" style="'+ls+'">'+esc(r.name)+'</a></li>');
+  html+='</ul>';
+  return html;
+}
+
+function insertLinks(){
+  if(!validate() || !composeItem) return;
+  statusEl.className='status'; statusEl.textContent='Bezig met invoegen...';
+  composeItem.body.setSelectedDataAsync(bulletsHtml(), {coercionType: Office.CoercionType.Html}, function(res){
+    if(res.status===Office.AsyncResultStatus.Succeeded){
+      statusEl.className='status ok'; statusEl.textContent='Links ingevoegd. Klik in de e-mail om verder te typen.'; dropFocus();
+    } else {
+      statusEl.className='status err'; statusEl.textContent='Invoegen mislukt: '+res.error.message+' — probeer "Of kopieer de selectie".';
+    }
+  });
+}
+
+function buildOverviewHtml(){
+  const e=getEmail();
+  const W=540, TAB=36;
+  const reportRow=(r)=>`<tr><td style="padding:9px 0;border-bottom:1px solid #F4EFF6;">`+
+    `<a href="${linkFor(r,e)}" style="color:#5E3176;text-decoration:none;font-weight:bold;font-size:14px;">${esc(r.name)}</a>`+
+    `<div style="color:#666666;font-size:12px;line-height:1.5;margin-top:3px;"><span style="color:#9a9a9a;">${esc(r.freq)}.</span> ${esc(r.desc)}</div>`+
+    `</td></tr>`;
+  const sectionRow=(t)=>`<tr><td style="padding:14px 0 4px;border-bottom:2px solid #E3D9E8;font-size:10pt;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:#83628F;">${esc(t)}</td></tr>`;
+  let rows='';
+  let last='';
+  REPORTS.forEach((r)=>{ if(r.noOverview) return; if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; } rows+=reportRow(r); });
+  const inner=`<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px;max-width:${W}px;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#1c1c1c;">`+
+    `<tr><td style="padding:0 0 6px;font-size:14px;">Een overzicht van onze rapporten, elke titel met een link naar uw persoonlijke toegang:</td></tr>`+
+    rows+
+    `</table>`;
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="${TAB}" style="width:${TAB}px;font-size:1px;line-height:1px;">&#160;</td><td>${inner}</td></tr></table>`;
+}
+
+function insertOverview(){
+  const e=getEmail();
+  if(!e || !validEmail(e)){ statusEl.className='status err'; statusEl.textContent='Vul eerst een geldig e-mailadres in.'; return; }
+  if(!composeItem){ statusEl.className='status err'; statusEl.textContent='Open dit vanuit een nieuw e-mailbericht.'; return; }
+  statusEl.className='status'; statusEl.textContent='Overzicht invoegen...';
+  composeItem.body.setSelectedDataAsync(buildOverviewHtml(), {coercionType: Office.CoercionType.Html}, function(res){
+    if(res.status===Office.AsyncResultStatus.Succeeded){ statusEl.className='status ok'; statusEl.textContent='Overzicht ingevoegd. Klik in de e-mail om verder te typen.'; dropFocus(); }
+    else { statusEl.className='status err'; statusEl.textContent='Invoegen mislukt: '+res.error.message; }
+  });
+}
+
+function latestHtml(sel,data,e){
+  const reps=(data&&data.reports)||{};
+  let inner='';
+  sel.forEach(r=>{
+    const link='<a href="'+linkFor(r,e)+'" style="color:#5E3176;">'+esc(r.name)+'</a>';
+    const d=reps[r.key];
+    const t=String(d&&d.title||'').trim(); const tEnd=/[.?!…]$/.test(t)?'':'.'; // no "?." after a question headline
+    if(d){ inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+': '+esc(t)+tEnd+' <span style="color:#888888;">'+esc(d.date)+', geschreven door '+esc(d.author)+'</span></p>'; }
+    else { inner+='<p style="margin:6px 0;font-size:11pt;line-height:1.5;">'+link+'</p>'; }
+  });
+  return '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="36" style="width:36px;font-size:1px;line-height:1px;">&#160;</td><td>'+inner+'</td></tr></table>';
+}
+
+function insertLatest(){
+  const e=getEmail();
+  if(!e || !validEmail(e)){ statusEl.className='status err'; statusEl.textContent='Vul eerst een geldig e-mailadres in.'; return; }
+  const sel=selected();
+  if(!sel.length){ statusEl.className='status err'; statusEl.textContent='Vink de rapporten aan die u wilt uitlichten.'; return; }
+  if(!composeItem){ statusEl.className='status err'; statusEl.textContent='Open dit vanuit een nieuw e-mailbericht.'; return; }
+  statusEl.className='status'; statusEl.textContent='Laatste publicaties ophalen...';
+  fetch('latest.json?ts='+Date.now()).then(r=>r.json()).then(data=>{
+    composeItem.body.setSelectedDataAsync(latestHtml(sel,data,e), {coercionType: Office.CoercionType.Html}, function(res){
+      if(res.status===Office.AsyncResultStatus.Succeeded){ statusEl.className='status ok'; statusEl.textContent='Ingevoegd (lijst van '+data.updated+'). Klik in de e-mail om verder te typen.'; dropFocus(); }
+      else { statusEl.className='status err'; statusEl.textContent='Invoegen mislukt: '+res.error.message; }
+    });
+  }).catch(err=>{ statusEl.className='status err'; statusEl.textContent='De publicatielijst kon niet worden geladen. Upload latest.json opnieuw.'; });
+}
+
+function copyBullets(){
+  if(!getEmail() || !validEmail(getEmail())){ statusEl.className='status err'; statusEl.textContent='Vul eerst een geldig e-mailadres in.'; return; }
+  if(!selected().length){ statusEl.className='status err'; statusEl.textContent='Vink eerst een of meer rapporten aan.'; return; }
+  const html=bulletsHtml();
+  const div=document.createElement('div'); div.contentEditable='true'; div.style.position='fixed'; div.style.opacity='0'; div.innerHTML=html;
+  document.body.appendChild(div);
+  const range=document.createRange(); range.selectNodeContents(div);
+  const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+  try{ document.execCommand('copy'); statusEl.className='status ok'; statusEl.textContent='Gekopieerd — plak het in de e-mail.'; dropFocus(); }
+  catch(e){ statusEl.className='status err'; statusEl.textContent='Kopiëren mislukt.'; }
+  sel.removeAllRanges(); document.body.removeChild(div);
+}
+</script>
+</body>
+</html>

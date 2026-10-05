@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ICC Trial Links</title>
+<!--
+  PERMANENT REDIRECTOR — do not put app logic here.
+  Outlook caches this file hard, so it must never need to change. Its only job is to bounce
+  to app.html with a unique ?ts= so the real app is always fetched fresh (cache-busting).
+  Edit app.html for all updates; this file stays as-is forever. The manifest points here.
+-->
+<script>
+  // location.replace = no extra history entry. Date.now() makes the URL unique every open.
+  location.replace('app.html?ts=' + Date.now());
+</script>
+</head>
+<body>
+<p style="font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#666;padding:14px;">ICC Trial Links laden…</p>
+<noscript><p style="font-family:Arial,Helvetica,sans-serif;padding:14px;">Zet JavaScript aan, of open <a href="app.html">app.html</a>.</p></noscript>
+</body>
+</html>

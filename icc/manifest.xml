@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ICC Trial Links - Outlook add-in manifest
+  Sister add-in of "ECR Trial Links", for the ICC Consultants brand (icc-consultants.nl).
+  Host base URL: https://peetbos2003-sudo.github.io/triallinks/icc
+  The files live in the "icc" SUBFOLDER of the same 'triallinks' GitHub Pages repo, so the
+  ECR add-in (repo root) and this one sit side by side. If you change host, repo or folder,
+  update every URL below.
+  The <Id> below is unique to ICC — never reuse the ECR Id, or Outlook treats them as one add-in.
+-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+  xsi:type="MailApp">
+
+  <Id>77f7f5c7-b054-47c8-8ab5-b9fee32bf1bf</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>ICC Consultants</ProviderName>
+  <DefaultLocale>nl-NL</DefaultLocale>
+  <DisplayName DefaultValue="ICC Trial Links" />
+  <Description DefaultValue="Voeg gepersonaliseerde ICC-rapportlinks in een e-mail aan een prospect in." />
+  <IconUrl DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/icon-64.png" />
+  <HighResolutionIconUrl DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/icon-128.png" />
+  <SupportUrl DefaultValue="https://icc-consultants.nl/nl" />
+
+  <Hosts>
+    <Host Name="Mailbox" />
+  </Hosts>
+
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.3" />
+    </Sets>
+  </Requirements>
+
+  <FormSettings>
+    <Form xsi:type="ItemEdit">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/taskpane.html" />
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+
+  <Permissions>ReadWriteItem</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit" />
+  </Rule>
+
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox" />
+      </bt:Sets>
+    </Requirements>
+
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+          <FunctionFile resid="Commands.Url" />
+
+          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="iccGroup">
+                <Label resid="GroupLabel" />
+                <Control xsi:type="Button" id="iccTaskpaneButton">
+                  <Label resid="TaskpaneButton.Label" />
+                  <Supertip>
+                    <Title resid="TaskpaneButton.Label" />
+                    <Description resid="TaskpaneButton.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16" />
+                    <bt:Image size="32" resid="Icon.32" />
+                    <bt:Image size="80" resid="Icon.80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/icon-16.png" />
+        <bt:Image id="Icon.32" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/icon-32.png" />
+        <bt:Image id="Icon.80" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/icon-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/taskpane.html" />
+        <bt:Url id="Commands.Url" DefaultValue="https://peetbos2003-sudo.github.io/triallinks/icc/commands.html" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="ICC Consultants" />
+        <bt:String id="TaskpaneButton.Label" DefaultValue="ICC Trial Links" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Voeg gepersonaliseerde ICC-rapportlinks voor deze prospect in de e-mail in." />
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>
