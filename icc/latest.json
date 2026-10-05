@@ -1,9 +1,25 @@
 {
   "updated": "2026-10-05",
   "reports": {
-    "icc-renterapport": { "title": "Markten te enthousiast met inprijzen renteverhogingen", "date": "woensdag, 30 september 2026", "author": "Maarten Spek" },
-    "icc-valutarapport": { "title": "Rentebeleid en politieke risico's maken euro kind van de rekening", "date": "donderdag, 01 oktober 2026", "author": "Maarten Spek" },
-    "icc-global-financial-markets": { "title": "Meer onzekerheden door een veranderende wereldorde", "date": "donderdag, 24 september 2026", "author": "Eddy Markus" },
-    "weekupdate-voor-cfos-treasurers": { "title": "Hoe ver moeten de rentes nog stijgen?", "date": "vrijdag, 02 oktober 2026", "author": "Eddy Markus" }
+    "icc-renterapport": {
+      "title": "Markten te enthousiast met inprijzen renteverhogingen",
+      "date": "woensdag, 30 september 2026",
+      "author": "Maarten Spek"
+    },
+    "icc-valutarapport": {
+      "title": "Rentebeleid en politieke risico’s maken euro kind van de rekening",
+      "date": "donderdag, 01 oktober 2026",
+      "author": "Maarten Spek"
+    },
+    "icc-global-financial-markets": {
+      "title": "Meer onzekerheden door een veranderende wereldorde",
+      "date": "donderdag, 24 september 2026",
+      "author": "Eddy Markus"
+    },
+    "weekupdate-voor-cfos-treasurers": {
+      "title": "Hoe ver moeten de rentes nog stijgen?",
+      "date": "vrijdag, 02 oktober 2026",
+      "author": "Eddy Markus"
+    }
   }
 }
