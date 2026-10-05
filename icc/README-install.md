@@ -28,8 +28,10 @@ Buttons:
   (No Investment/Treasury presets — not needed for ICC.)
 - **Geselecteerde links invoegen** — the ticked items as a bulleted list of named links. No
   "platform access" line (ICC has no general platform page).
-- **Volledig rapportoverzicht invoegen** — the three reports with frequency and a one-line
-  description. **The Weekupdate is deliberately left out** (`noOverview` flag in `app.html`).
+- **Volledig rapportoverzicht invoegen** — all four items with frequency and a one-line
+  description, under their headings (Rapporten / Nieuwsbrief van Eddy Markus). The Weekupdate was
+  left out until 5 Oct 2026 and is now included; to exclude an item again, give its `REPORTS` entry
+  `noOverview:true` in `app.html`.
 - **Selectie + laatste publicatie invoegen** — the ticked items with each one's latest edition
   headline, date and author, read live from `latest.json`.
 - **Of kopieer de selectie** — copies the bulleted links to paste manually.

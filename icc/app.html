@@ -59,7 +59,7 @@
   <button class="overview" id="btnOverview" onclick="insertOverview()">Volledig rapportoverzicht invoegen</button>
   <button class="overview" id="btnLatest" onclick="insertLatest()">Selectie + laatste publicatie invoegen</button>
   <div class="hint2" id="latestStamp" style="display:none;"></div>
-  <div class="hint2">"Overzicht" voegt alle rapporten in met hun verschijningsfrequentie, los van de vinkjes. De Weekupdate zit er niet in.</div>
+  <div class="hint2">"Overzicht" voegt alle rapporten in met hun verschijningsfrequentie, los van de vinkjes. De Weekupdate staat er ook in.</div>
   <button class="copy" id="btnCopy" onclick="copyBullets()">Of kopieer de selectie</button>
   <div class="status" id="status"></div>
 </div>
@@ -68,12 +68,13 @@
 const BASE="https://icc-consultants.nl/nl";
 // Every link is BASE + "/" + slug + "?email=<prospect>". The ICC pages are evergreen (always the
 // current edition), so no per-edition slugs are needed. key = lookup in latest.json.
-// noOverview keeps an item out of "Volledig rapportoverzicht invoegen".
+// noOverview:true would keep an item out of "Volledig rapportoverzicht invoegen" (none at the moment;
+// the Weekupdate was excluded until 5 Oct 2026, then added back at Petra's request).
 const REPORTS=[
   {area:"Rapporten", name:"ICC Renterapport", key:"icc-renterapport", slug:"research/icc-renterapport", freq:"Tweewekelijks", desc:"Fundamentele analyse van de Europese en Amerikaanse rentemarkten en het beleid van de centrale banken, met concrete verwachtingen voor onder meer EURIBOR, SOFR en de swaprentes."},
   {area:"Rapporten", name:"ICC Valutarapport", key:"icc-valutarapport", slug:"research/icc-valutarapport", freq:"Tweewekelijks", desc:"Analyse van de belangrijkste valutamarkten, met verwachtingen voor EUR/USD, EUR/GBP en de andere relevante valuta's voor uw hedgingbeslissingen."},
   {area:"Rapporten", name:"ICC Global Financial Markets", key:"icc-global-financial-markets", slug:"research/icc-global-financial-markets", freq:"Tweewekelijks", desc:"Fundamentele analyse van de wereldwijde financiële markten en wat de grote economische en geopolitieke ontwikkelingen betekenen voor rente, valuta en beleggingen."},
-  {area:"Nieuwsbrief van Eddy Markus", name:"Weekupdate voor CFO's & treasurers", key:"weekupdate-voor-cfos-treasurers", slug:"weekupdate-voor-cfos-treasurers", freq:"Wekelijks", noOverview:true, desc:"Elke zaterdagochtend in enkele minuten de kern van de markt. Met concrete rente- en valutavoorspellingen voor uw hedgingbeslissingen."},
+  {area:"Nieuwsbrief van Eddy Markus", name:"Weekupdate voor CFO's & treasurers", key:"weekupdate-voor-cfos-treasurers", slug:"weekupdate-voor-cfos-treasurers", freq:"Wekelijks", desc:"Elke zaterdagochtend in enkele minuten de kern van de markt. Met concrete rente- en valutavoorspellingen voor uw hedgingbeslissingen."},
 ];
 
 const emailEl=document.getElementById('email');
@@ -180,7 +181,7 @@ function buildOverviewHtml(){
   let last='';
   REPORTS.forEach((r)=>{ if(r.noOverview) return; if(r.area!==last){ rows+=sectionRow(r.area); last=r.area; } rows+=reportRow(r); });
   const inner=`<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="${W}" style="width:${W}px;max-width:${W}px;border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#1c1c1c;">`+
-    `<tr><td style="padding:0 0 6px;font-size:14px;">Een overzicht van onze rapporten, elke titel met een link naar uw persoonlijke toegang:</td></tr>`+
+    `<tr><td style="padding:0 0 6px;font-size:14px;">Een overzicht van onze publicaties, elke titel met een link naar uw persoonlijke toegang:</td></tr>`+
     rows+
     `</table>`;
   return `<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="${TAB}" style="width:${TAB}px;font-size:1px;line-height:1px;">&#160;</td><td>${inner}</td></tr></table>`;
