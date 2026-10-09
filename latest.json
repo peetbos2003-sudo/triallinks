@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-08",
+  "updated": "2026-10-09",
   "reports": {
     "global-financial-markets": {
-      "title": "More Uncertainties Due to a Changing World Order",
-      "date": "Thursday, 24 September 2026",
-      "author": "Edward Markus"
+      "title": "The end of the road",
+      "date": "Thursday, 08 October 2026",
+      "author": "Eddy Markus"
     },
     "interest-rates-outlook": {
       "title": "Markets are too enthusiastic about pricing in rate hikes",
@@ -42,8 +42,8 @@
       "author": "Eelco Ubbels"
     },
     "technical-trend-outlook": {
-      "title": "How high can rates rise?",
-      "date": "Thursday, 24 September 2026",
+      "title": "US stock market: Bullish, but increasingly fragile",
+      "date": "Thursday, 08 October 2026",
       "author": "Henk-Jan Pijper"
     },
     "fund-selection": {
@@ -52,10 +52,10 @@
       "author": "Eelco Ubbels"
     },
     "eddys-weekly-market-insight": {
-      "title": "How much higher will interest rates go?",
-      "date": "Friday, 02 October 2026",
+      "title": "You can dance until the music stops",
+      "date": "Friday, 09 October 2026",
       "author": "Edward Markus",
-      "slug": "market-insight/eddys-weekly-market-insight-21"
+      "slug": "market-insight/eddys-weekly-market-insight-22"
     }
   }
 }
