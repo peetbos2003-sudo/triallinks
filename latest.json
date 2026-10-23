@@ -1,10 +1,10 @@
 {
-  "updated": "2026-10-22",
+  "updated": "2026-10-23",
   "reports": {
     "global-financial-markets": {
-      "title": "The end of the road",
-      "date": "Thursday, 08 October 2026",
-      "author": "Eddy Markus"
+      "title": "Cracks in AI optimism",
+      "date": "Thursday, 22 October 2026",
+      "author": "Edward Markus"
     },
     "interest-rates-outlook": {
       "title": "US mid-term elections could have a major impact on oil and bond markets",
@@ -42,8 +42,8 @@
       "author": "Eelco Ubbels"
     },
     "technical-trend-outlook": {
-      "title": "US stock market: Bullish, but increasingly fragile",
-      "date": "Thursday, 08 October 2026",
+      "title": "Silver halved, but further downside looms",
+      "date": "Thursday, 22 October 2026",
       "author": "Henk-Jan Pijper"
     },
     "fund-selection": {
@@ -52,10 +52,10 @@
       "author": "Eelco Ubbels"
     },
     "eddys-weekly-market-insight": {
-      "title": "Interest rates: Europe is vulnerable",
-      "date": "Friday, 16 October 2026",
+      "title": "Where is AI heading?",
+      "date": "Friday, 23 October 2026",
       "author": "Edward Markus",
-      "slug": "market-insight/eddys-weekly-market-insight-23"
+      "slug": "market-insight/eddys-weekly-market-insight-24"
     }
   }
 }
