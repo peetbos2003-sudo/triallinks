@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-29",
+  "updated": "2026-10-30",
   "reports": {
     "global-financial-markets": {
       "title": "Cracks in AI optimism",
@@ -52,10 +52,10 @@
       "author": "Eelco Ubbels"
     },
     "eddys-weekly-market-insight": {
-      "title": "Where is AI heading?",
-      "date": "Friday, 23 October 2026",
+      "title": "Crowding out is back",
+      "date": "Friday, 30 October 2026",
       "author": "Edward Markus",
-      "slug": "market-insight/eddys-weekly-market-insight-24"
+      "slug": "market-insight/eddys-weekly-market-insight-25"
     }
   }
 }
