@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-26",
+  "updated": "2026-11-27",
   "reports": {
     "global-financial-markets": {
       "title": "How much longer will AI keep the market afloat?",
@@ -12,8 +12,8 @@
       "author": "Maarten Spek"
     },
     "currencies-outlook": {
-      "title": "Why Cheaper Oil Doesn't Lower Interest Rates",
-      "date": "Thursday, 12 November 2026",
+      "title": "More work ahead for the Fed",
+      "date": "Thursday, 26 November 2026",
       "author": "Edward Markus"
     },
     "monthly-chart-pack": {
@@ -52,10 +52,10 @@
       "author": "Eelco Ubbels"
     },
     "eddys-weekly-market-insight": {
-      "title": "How much longer will AI keep the market afloat?",
-      "date": "Friday, 20 November 2026",
+      "title": "The Fed still has work to do",
+      "date": "Friday, 27 November 2026",
       "author": "Edward Markus",
-      "slug": "market-insight/eddys-weekly-market-insight-28"
+      "slug": "market-insight/eddys-weekly-market-insight-29"
     }
   }
 }
